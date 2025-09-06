@@ -10,10 +10,10 @@ import DomainSelector from "./components/Chat/DomainSelector";
 
 export default function App() {
   const [messages, setMessages] = useState([]);
-  const [activeView, setActiveView] = useState("chat"); // chat, help, settings
+  const [activeView, setActiveView] = useState("chat"); 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [selectedSessionId, setSelectedSessionId] = useState(null);
-  const [selectedDomain, setSelectedDomain] = useState(null); // NEW: domain state
+  const [selectedDomain, setSelectedDomain] = useState(null); 
 
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -72,7 +72,6 @@ export default function App() {
     </div>
   </div>
 
-  {/* ✅ Domain Selector moved to the right */}
   <div className="h-full flex items-center">
     <DomainSelector
       selectedDomain={selectedDomain}
@@ -82,7 +81,6 @@ export default function App() {
 </header>
 
 
-      {/* Main Content */}
       <div className="flex flex-1 overflow-hidden">
         <Sidebar
           onNewChat={handleNewChat}

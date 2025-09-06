@@ -13,7 +13,6 @@ import {
 import { useEffect, useState } from "react";
 import { fetchConversations, fetchConversationHistory } from "../../api";
 
-// Sidebar Component
 export default function Sidebar({
   onNewChat,
   onHelpClick,
@@ -74,7 +73,6 @@ export default function Sidebar({
         isCollapsed ? "w-16" : "w-52"
       }  min-h-screen bg-[#e4e5e4] text-gray-800 flex flex-col border-r border-gray-300 transition-all duration-300`}
     >
-      {/* Collapse Toggle & Profile */}
       <div className="relative flex flex-col px-3 py-4">
         <button
           onClick={toggleSidebar}
@@ -84,7 +82,6 @@ export default function Sidebar({
           {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
         </button>
 
-        {/* User Profile */}
         <div
           className="flex items-center gap-2 px-1 cursor-pointer"
           onClick={toggleProfileMenu}
@@ -96,7 +93,6 @@ export default function Sidebar({
           )}
         </div>
 
-        {/* Profile Dropdown */}
         {!isCollapsed && showProfileMenu && (
           <div className="mt-2 ml-1 flex flex-col gap-1 bg-white border border-gray-300 rounded-md shadow text-sm z-10 w-36">
             <div
@@ -117,7 +113,6 @@ export default function Sidebar({
         )}
       </div>
 
-      {/* Menu Items */}
       <div className="flex flex-col gap-2 px-2 text-sm font-medium mt-2">
         <div
           onClick={handleNewChat}
@@ -128,7 +123,6 @@ export default function Sidebar({
           {!isCollapsed && <span>New Chat</span>}
         </div>
 
-        {/* Conversations */}
         <div>
           <div
             onClick={toggleConversations}

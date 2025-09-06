@@ -294,7 +294,6 @@ const exampleQuestions = domainExamples[selectedDomain] || [];
             </div>
           </div>
       ) : (
-        // Chat messages
         <div className="w-full space-y-6">
           {messages.map((msg, index) => (
             <div
@@ -333,7 +332,6 @@ const exampleQuestions = domainExamples[selectedDomain] || [];
                   )}
                 </div>
 
-                {/* Copy & Speak for bot */}
                 {msg.role === "bot" && msg.text !== "..." && (
                   <div className="absolute top-2 right-3 flex gap-2">
                     <button
@@ -401,7 +399,6 @@ const exampleQuestions = domainExamples[selectedDomain] || [];
           )}
         </div>
 
-        {/* Input */}
         <div className="relative flex-1">
   <textarea
     ref={inputRef}
@@ -428,7 +425,6 @@ const exampleQuestions = domainExamples[selectedDomain] || [];
 </div>
 
 
-        {/* Voice Input */}
         <button
           onClick={handleVoiceInput}
           className={`p-3 rounded-xl bg-gray-200 text-gray-800 hover:bg-gray-300 ${

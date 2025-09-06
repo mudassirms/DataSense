@@ -29,7 +29,6 @@ export default function Login({ onLogin }) {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#050d1b] text-gray-200 px-4 font-[Inter] relative overflow-hidden">
-      {/* Top-left Branding */}
       <div className="absolute top-6 left-6 md:left-12 text-2xl font-bold tracking-tight z-10 flex items-center gap-2">
         <span className="text-gray-100">MaverickAI</span>
         <span className="bg-gradient-to-r from-cyan-300 via-green-300 to-teal-400 text-transparent bg-clip-text drop-shadow-[0_0_8px_rgba(0,255,200,0.6)]">
@@ -37,25 +36,19 @@ export default function Login({ onLogin }) {
         </span>
       </div>
 
-      {/* Background Glow */}
       <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-cyan-500/20 rounded-full blur-[200px]" />
       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-teal-400/20 rounded-full blur-[160px]" />
 
-      {/* Login Card */}
       <div className="w-full max-w-md z-10 bg-[#0a152b]/90 rounded-2xl shadow-xl border border-cyan-500/20 p-10 backdrop-blur-lg">
-        {/* Logo */}
         <div className="flex justify-center mb-6">
           <img src={logo} alt="Logo" className="h-28 w-auto drop-shadow-[0_0_15px_rgba(0,255,200,0.5)]" />
         </div>
 
-        {/* Title */}
         <h2 className="text-2xl font-semibold text-center mb-8 bg-gradient-to-r from-cyan-400 to-teal-500 text-transparent bg-clip-text">
           Welcome Back
         </h2>
 
-        {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-6">
-          {/* Email Input */}
           <div className="relative">
             <FaEnvelope className="absolute left-4 top-1/2 transform -translate-y-1/2 text-cyan-400/60" />
             <input
@@ -78,7 +71,6 @@ export default function Login({ onLogin }) {
             </label>
           </div>
 
-          {/* Password Input */}
           <div className="relative">
             <FaLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-cyan-400/60" />
             <input
@@ -101,7 +93,6 @@ export default function Login({ onLogin }) {
             </label>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-3 bg-gradient-to-r from-cyan-400 to-teal-500 hover:opacity-90 text-white font-semibold rounded-xl 
@@ -111,7 +102,6 @@ export default function Login({ onLogin }) {
           </button>
         </form>
 
-        {/* Sign Up Prompt */}
         <div className="mt-6 text-sm text-center text-gray-400">
           Don’t have an account?{" "}
           <span className="text-cyan-400 hover:underline hover:text-cyan-300 cursor-pointer font-medium">

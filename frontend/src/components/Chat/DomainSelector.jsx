@@ -4,7 +4,6 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 export default function DomainSelector({ selectedDomain, onDomainChange }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  // 🔹 Domains list (without "Select a Domain")
   const domains = ["Healthcare", "Stock", "School", "Retail", "Finance"];
 
   return (
