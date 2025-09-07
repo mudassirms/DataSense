@@ -4,7 +4,6 @@ import ChatInterface from "./components/Chat/ChatInterface";
 import HelpCenter from "./components/Chat/helpcenter";
 import SettingsPage from "./components/Chat/SettingsPage";
 import Login from "./components/Auth/Login";
-import logo from "./assets/logo_4.png";
 import favicon from "./assets/datasense.png";
 import DomainSelector from "./components/Chat/DomainSelector";
 
@@ -91,24 +90,21 @@ export default function App() {
         />
 
         <div className="flex flex-col flex-1 bg-white text-black rounded-t-2xl shadow-lg overflow-hidden">
-          <main className="flex-1 overflow-hidden">
-            {activeView === "chat" && (
-              <ChatInterface
-                messages={messages}
-                setMessages={setMessages}
-                onLogout={handleLogout}
-                sessionId={selectedSessionId}
-                selectedDomain={selectedDomain}
-              />
-            )}
-            {activeView === "help" && <HelpCenter />}
-            {activeView === "settings" && <SettingsPage />}
-          </main>
-
-          <footer className="text-xs text-center text-gray-400 py-3 bg-white">
-            &copy; 2025 DataSense • Empowering AI Conversations
-          </footer>
-        </div>
+  {/* Main content area */}
+  <main className="flex-1 flex flex-col">
+    {activeView === "chat" && (
+      <ChatInterface
+        messages={messages}
+        setMessages={setMessages}
+        onLogout={handleLogout}
+        sessionId={selectedSessionId}
+        selectedDomain={selectedDomain}
+      />
+    )}
+    {activeView === "help" && <HelpCenter />}
+    {activeView === "settings" && <SettingsPage />}
+  </main>
+</div>
       </div>
     </div>
   );

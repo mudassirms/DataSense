@@ -24,6 +24,7 @@ export default function Sidebar({
   const [showConversations, setShowConversations] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [conversationList, setConversationList] = useState([]);
+  const [activeMenu, setActiveMenu] = useState("newChat"); // track selected menu
 
   useEffect(() => {
     const loadConversations = async () => {
@@ -44,6 +45,7 @@ export default function Sidebar({
       if (typeof onSessionSelect === "function") {
         onSessionSelect(sessionId, history.messages);
       }
+      setActiveMenu("conversations");
     } catch (err) {
       console.error("Failed to load conversation history", err);
     }
@@ -53,6 +55,7 @@ export default function Sidebar({
     if (typeof onNewChat === "function") {
       onNewChat();
     }
+    setActiveMenu("newChat");
   };
 
   const handleLogoutClick = () => {
@@ -66,6 +69,9 @@ export default function Sidebar({
   const toggleSidebar = () => setIsCollapsed(!isCollapsed);
   const toggleConversations = () => setShowConversations(!showConversations);
   const toggleProfileMenu = () => setShowProfileMenu(!showProfileMenu);
+
+  const activeColor = "bg-[#344955] text-white"; 
+  const hoverColor = "hover:bg-[#50727B]/80"; 
 
   return (
     <div
@@ -102,7 +108,7 @@ export default function Sidebar({
               <Settings className="w-4 h-4 text-indigo-600" />
               <span>Profile Settings</span>
             </div>
-             <div
+            <div
               className="flex items-center gap-2 px-3 py-2 hover:bg-red-100 cursor-pointer"
               onClick={handleLogoutClick}
             >
@@ -114,19 +120,26 @@ export default function Sidebar({
       </div>
 
       <div className="flex flex-col gap-2 px-2 text-sm font-medium mt-2">
+        {/* New Chat */}
         <div
           onClick={handleNewChat}
-          className="flex items-center gap-3 hover:bg-cyan-500/20 px-3 py-2 rounded-md cursor-pointer transition"
+          className={`flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer transition 
+            ${activeMenu === "newChat" ? activeColor : hoverColor}`}
           title="New Chat"
         >
           <Bot className="w-5 h-5 text-cyan-400" />
           {!isCollapsed && <span>New Chat</span>}
         </div>
 
+        {/* Conversations */}
         <div>
           <div
-            onClick={toggleConversations}
-            className="flex items-center justify-between hover:bg-cyan-500/20 px-3 py-2 rounded-md cursor-pointer transition"
+            onClick={() => {
+              toggleConversations();
+              setActiveMenu("conversations");
+            }}
+            className={`flex items-center justify-between px-3 py-2 rounded-md cursor-pointer transition 
+              ${activeMenu === "conversations" ? activeColor : hoverColor}`}
             title="Conversations"
           >
             <div className="flex items-center gap-3">
@@ -164,18 +177,28 @@ export default function Sidebar({
           )}
         </div>
 
+        {/* Settings */}
         <div
-          onClick={onSetting}
-          className="flex items-center gap-3 hover:bg-cyan-500/20 px-3 py-2 rounded-md cursor-pointer transition"
+          onClick={() => {
+            onSetting();
+            setActiveMenu("settings");
+          }}
+          className={`flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer transition 
+            ${activeMenu === "settings" ? activeColor : hoverColor}`}
           title="Settings"
         >
           <Settings className="w-5 h-5 text-cyan-400" />
           {!isCollapsed && <span>Settings</span>}
         </div>
 
+        {/* Help */}
         <div
-          onClick={onHelpClick}
-          className="flex items-center gap-3 hover:bg-cyan-500/20 px-3 py-2 rounded-md cursor-pointer transition"
+          onClick={() => {
+            onHelpClick();
+            setActiveMenu("help");
+          }}
+          className={`flex items-center gap-3 px-3 py-2 rounded-md cursor-pointer transition 
+            ${activeMenu === "help" ? activeColor : hoverColor}`}
           title="Help Center"
         >
           <HelpCircle className="w-5 h-5 text-cyan-400" />
