@@ -418,7 +418,7 @@ export default function ChatInterface({ sessionId, messages, setMessages, select
             <button
               onClick={handleSend}
               disabled={loading || !input.trim()}
-              className="absolute right-3 bottom-3 p-2 rounded-md text-blue-600 hover:bg-blue-100 disabled:text-gray-400"
+              className="absolute right-3 bottom-1 p-2  rounded-md text-blue-600 hover:bg-blue-100 disabled:text-gray-400"
               title="Send"
             >
               <Send className="w-5 h-5" />

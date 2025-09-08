@@ -1,97 +1,212 @@
-import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Plus, Edit2, Trash2 } from "lucide-react";
+import DomainSelector from "./DomainSelector";
 
-export default function SettingsPage() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [form, setForm] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
+export default function SettingsPage({
+  domains,
+  setDomains,
+  selectedDomain,
+  setSelectedDomain,
+  schemas,
+  setSchemas,
+  selectedLLM,
+  setSelectedLLM,
+}) {
+  const [newDomain, setNewDomain] = useState("");
+  const [editingDomain, setEditingDomain] = useState(null);
+  const [schemaText, setSchemaText] = useState("");
   const [message, setMessage] = useState("");
+  const LLM_OPTIONS = ["GPT-4", "Claude-3", "Llama-3"];
 
-  const togglePassword = () => setShowPassword(!showPassword);
+  useEffect(() => {
+    setSchemaText(schemas[selectedDomain] || "");
+  }, [selectedDomain, schemas]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+  const handleAddDomain = () => {
+    if (!newDomain.trim()) return;
+    if (domains.includes(newDomain)) {
+      setMessage("⚠️ Domain already exists.");
+      return;
+    }
+    setDomains([...domains, newDomain]);
+    setSchemas({ ...schemas, [newDomain]: "" });
+    setNewDomain("");
+    setMessage(`✅ Domain "${newDomain}" added!`);
   };
 
-  const handleReset = () => {
-    const { currentPassword, newPassword, confirmPassword } = form;
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      return setMessage("❗ Please fill in all fields.");
-    }
-    if (newPassword !== confirmPassword) {
-      return setMessage("❌ New passwords do not match.");
-    }
-    setMessage("✅ Password reset successfully!");
-    setForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+  const handleEditDomain = (oldDomain, newName) => {
+    if (!newName.trim()) return;
+    setDomains(domains.map((d) => (d === oldDomain ? newName : d)));
+    if (selectedDomain === oldDomain) setSelectedDomain(newName);
+
+    const newSchemas = { ...schemas };
+    newSchemas[newName] = newSchemas[oldDomain] || "";
+    delete newSchemas[oldDomain];
+    setSchemas(newSchemas);
+
+    setEditingDomain(null);
+    setMessage(`✏️ Domain updated to "${newName}".`);
+  };
+
+  const handleDeleteDomain = (domain) => {
+    setDomains(domains.filter((d) => d !== domain));
+    if (selectedDomain === domain) setSelectedDomain("");
+    const newSchemas = { ...schemas };
+    delete newSchemas[domain];
+    setSchemas(newSchemas);
+    setMessage(`🗑️ Domain "${domain}" deleted.`);
+  };
+
+  const handleSchemaSave = () => {
+    if (!selectedDomain) return;
+    setSchemas({ ...schemas, [selectedDomain]: schemaText });
+    setMessage(`✅ Schema saved for ${selectedDomain}`);
   };
 
   return (
-    <div className="w-full h-full px-6 py-8 bg-[#f4f5f7] text-gray-800 overflow-y-auto">
-      <h1 className="text-3xl font-bold text-center text-indigo-600 mb-6">Settings</h1>
+    <div className="w-full h-full px-6 py-8 bg-[#f4f5f7] text-gray-800 overflow-y-auto max-h-screen">
+      <h1 className="text-3xl font-bold text-left text-indigo-600 mb-8">
+        Settings Page
+      </h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-1 gap-5 max-w-2xl mx-auto">
-        {/* Password Reset */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+        {/* Domain Settings */}
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <h2 className="text-xl font-semibold mb-4 text-indigo-600">
-            🔒 Reset Password
+            Domain Settings
           </h2>
-          <div className="space-y-4">
-            {["currentPassword", "newPassword", "confirmPassword"].map((field) => (
-              <div key={field} className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name={field}
-                  placeholder={
-                    field === "currentPassword"
-                      ? "Current Password"
-                      : field === "newPassword"
-                      ? "New Password"
-                      : "Confirm New Password"
-                  }
-                  value={form[field]}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
-                />
-                <button
-                  onClick={togglePassword}
-                  type="button"
-                  className="absolute right-3 top-2.5 text-gray-500"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            ))}
-            <button
-              onClick={handleReset}
-              className="w-full py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700"
-            >
-              Reset Password
-            </button>
-            {message && (
-              <p className="text-sm text-center text-gray-600 mt-2">{message}</p>
-            )}
+          <div className="mb-4">
+            <p className="text-sm font-medium text-gray-600 mb-1">
+              Default Domain
+            </p>
+            <DomainSelector
+              selectedDomain={selectedDomain}
+              onDomainChange={setSelectedDomain}
+            />
           </div>
+
+          <div className="flex gap-2 items-center mb-4">
+            <input
+              type="text"
+              placeholder="Enter new domain"
+              value={newDomain}
+              onChange={(e) => setNewDomain(e.target.value)}
+              className="flex-1 px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-indigo-300"
+            />
+            <button
+              onClick={handleAddDomain}
+              className="px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700 flex items-center gap-1"
+            >
+              <Plus size={16} /> Add
+            </button>
+          </div>
+
+          <div className="border rounded-lg overflow-hidden">
+            <table className="w-full text-sm text-left">
+              <thead className="bg-gray-100 text-gray-700">
+                <tr>
+                  <th className="px-4 py-2 font-medium">Domain</th>
+                  <th className="px-4 py-2 font-medium text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {domains.map((domain) => (
+                  <tr
+                    key={domain}
+                    className={`border-t ${
+                      selectedDomain === domain ? "bg-blue-50" : "bg-white"
+                    }`}
+                  >
+                    <td className="px-4 py-2">
+                      {editingDomain === domain ? (
+                        <input
+                          type="text"
+                          defaultValue={domain}
+                          onBlur={(e) =>
+                            handleEditDomain(domain, e.target.value)
+                          }
+                          className="w-full px-2 py-1 border rounded-md text-sm"
+                          autoFocus
+                        />
+                      ) : (
+                        <span>{domain}</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-2 text-right flex justify-end gap-2">
+                      <button
+                        onClick={() =>
+                          setEditingDomain(
+                            editingDomain === domain ? null : domain
+                          )
+                        }
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        <Edit2 size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteDomain(domain)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {message && (
+            <p className="text-sm text-gray-600 mt-2">{message}</p>
+          )}
         </div>
 
-        {/* Data & Privacy Controls */}
+        {/* LLM Settings */}
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <h2 className="text-xl font-semibold mb-4 text-indigo-600">
-            🧹 Data & Privacy
+            LLM Settings
           </h2>
-          <ul className="list-disc list-inside text-sm text-gray-700 space-y-1">
-            <li>Your data is private and never shared with third parties.</li>
-            <li>You can delete your chat history anytime.</li>
-          </ul>
-          <button
-            onClick={() => alert("History deleted (placeholder)")}
-            className="mt-4 px-4 py-2 text-sm bg-red-500 text-white rounded-md hover:bg-red-600"
+          <select
+            value={selectedLLM}
+            onChange={(e) => setSelectedLLM(e.target.value)}
+            className="w-full px-3 py-2 border rounded-md text-sm focus:ring-2 focus:ring-indigo-300"
           >
-            Delete All History
-          </button>
+            {LLM_OPTIONS.map((llm) => (
+              <option key={llm} value={llm}>
+                {llm}
+              </option>
+            ))}
+          </select>
+          <p className="text-sm text-gray-500 mt-2">
+            Current LLM: <span className="font-medium">{selectedLLM}</span>
+          </p>
+        </div>
+
+        {/* Schema Editor */}
+        <div className="bg-white rounded-xl p-6 shadow-sm col-span-1 md:col-span-2 lg:col-span-3">
+          <h2 className="text-xl font-semibold mb-4 text-indigo-600">
+            📑 Table Schema for {selectedDomain || "No domain selected"}
+          </h2>
+          {selectedDomain ? (
+            <>
+              <textarea
+                rows={10}
+                value={schemaText}
+                onChange={(e) => setSchemaText(e.target.value)}
+                placeholder="Paste your SQL / table schema here..."
+                className="w-full h-64 p-3 border rounded-md text-sm font-mono focus:ring-2 focus:ring-indigo-300 resize-none overflow-y-auto"
+              />
+              <button
+                onClick={handleSchemaSave}
+                className="mt-3 px-4 py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700"
+              >
+                Save Schema
+              </button>
+            </>
+          ) : (
+            <p className="text-sm text-gray-500">
+              Please select a domain to edit its schema.
+            </p>
+          )}
         </div>
       </div>
     </div>
